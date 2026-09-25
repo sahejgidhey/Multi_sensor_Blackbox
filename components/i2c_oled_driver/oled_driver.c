@@ -89,6 +89,8 @@ void oled_init(i2c_master_bus_handle_t bus_handle, i2c_master_dev_handle_t* oled
 
     oled_init_commands();
 
+    ESP_LOGI("OLED" , "Device configed");
+
 }
 
 void oled_push_buffer(uint8_t* buffer)

@@ -1,5 +1,5 @@
 #include "include/bmp280_driver.h"
-
+#include "esp_log.h"
 
 // this is the calib dig used for calibrating raw temp and pressure data
 uint16_t dig_T1;
@@ -22,7 +22,12 @@ void bmp280_init(i2c_master_bus_handle_t bus_handle, i2c_master_dev_handle_t *bm
 
     // this will wake up sensor
     uint8_t setup_data[2] = {0xF4, 0x93};
-    i2c_master_transmit(*bmp280_handle, setup_data, 2, 1000); // this will transmit 0x23 bit to start temp reading 
+    esp_err_t err = i2c_master_transmit(*bmp280_handle, setup_data, 2, 1000); // this will transmit 0x23 bit to start temp reading 
+
+    if(err == ESP_OK)
+    {
+        ESP_LOGI("BMP280" , "Device config");
+    }
 
 }
 
