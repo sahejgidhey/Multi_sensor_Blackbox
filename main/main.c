@@ -65,8 +65,6 @@ void mpu6050_sensor_task(void *vParametes)
                     sensor_data.data = mpu6050_data;
                     sensor_data.sensor_id = 6050;
 
-                    ESP_LOGI("MPU6050" , "Sensor data->%p" , (void *) sensor_data.data);
-
                 }
 
                 if(xQueueSend(sensor_data_queue , (void*) &sensor_data , pdMS_TO_TICKS(20)) == pdTRUE)
@@ -106,7 +104,41 @@ void bmp280_sensor_task(void *vParameters)
     while(1)
     {
 
-        bmp280_get_data(bmp280_handle , bmp280_data);
+        if(xQueueReceive(sensor_data_queue , &sensor_data , portMAX_DELAY) == pdTRUE)
+        {
+            
+            if(xSemaphoreTake(bus_mutex , portMAX_DELAY) == pdTRUE)
+            {
+
+                if(sensor_data.sensor_id == 280)
+                {
+
+                    bmp280_get_data(bmp280_handle , bmp280_data);
+                    ESP_LOGI("BMP280" , "DATA[0] -> %.f" , bmp280_data[0]);
+                    ESP_LOGI("BMP280" , "DATA[1] -> %.2f" , bmp280_data[1]);
+                    sensor_data.data = bmp280_data;
+                    sensor_data.sensor_id = 280;
+
+                }
+
+                if(xQueueSend(sensor_data_queue , (void*) &sensor_data , pdMS_TO_TICKS(20)) == pdTRUE)
+                {
+
+                    ESP_LOGI("BMP280" , "Sensor data sent");
+
+                }
+
+                if(xSemaphoreGive(bus_mutex) == pdTRUE)
+                {
+
+                    ESP_LOGI("BMP280" , "Mutex released");
+
+                }
+
+            }
+
+        }
+
         vTaskDelay(pdMS_TO_TICKS(50));
 
     }
@@ -154,8 +186,10 @@ void oled_print_task(void *vParameters)
                 {
 
                     ESP_LOGI("OLED" , "Sensor id->280");
+                    bmp280_page(buffer , sensor_data.data);
+                    oled_push_buffer(buffer);
+                    xQueueSend(sensor_data_queue , (void *) &sensor_data , pdMS_TO_TICKS(10));
                     
-                        
                 }
 
                 if(xSemaphoreGive(bus_mutex) == pdTRUE)
@@ -237,8 +271,9 @@ void app_main(void)
     gpio_install_isr_service(0);
     gpio_isr_handler_add(BUTTON,button_isr_handler,(void*) BUTTON);
 
-    xTaskCreatePinnedToCore(oled_print_task , "Oled Print Screen" , 5102 , NULL , 1 , NULL , 0);
-    xTaskCreatePinnedToCore(button_task , "Button control" , 2048 , NULL , 2 , NULL , 0);
+    xTaskCreatePinnedToCore(oled_print_task , "Oled Print Screen" , 5102 , NULL , 2 , NULL , 0);
+    xTaskCreatePinnedToCore(button_task , "Button control" , 2048 , NULL , 3 , NULL , 0);
     xTaskCreatePinnedToCore(mpu6050_sensor_task , "MPU Sensor" , 3072 , NULL , 1 , NULL , 1);
+    xTaskCreatePinnedToCore(bmp280_sensor_task , "BMP280 Sensor" , 3072 , NULL , 1 , NULL , 1);
 
 } 

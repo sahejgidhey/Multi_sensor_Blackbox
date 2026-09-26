@@ -67,12 +67,25 @@ void mpu6050_page(uint8_t* buffer , float* data)
 
 }
 
-void bmp280_page(uint8_t* buffer)
+void bmp280_page(uint8_t* buffer , float* data)
 {
 
     uint8_t buffer_temp[1024];
     memset(buffer_temp , 0x0 , 1024);
 
     text_print(buffer_temp , "BMP280" , sizeof("BMP280") , 0 , 40 , 3);
+    buffer_merge(buffer , buffer_temp , 1024);
+
+    text_print(buffer_temp , "Pressure" , sizeof("Pressure") , 2 , 3 , 3);
+    char num[4];
+    snprintf(num , sizeof(num), "%.f" , data[0]);
+    text_print(buffer_temp , num , sizeof(num) , 2 , 72 , 3);
+    buffer_merge(buffer , buffer_temp , 1024);
+
+    text_print(buffer_temp , "Temp" , sizeof("Temp") , 4 , 4 , 4);
+    char num1[10];
+    snprintf(num1 , sizeof(num1), "%.2f" , data[1]);
+    text_print(buffer_temp , num1 , sizeof(num1) , 4 , 45 , 4);
+    buffer_merge(buffer , buffer_temp , 1024);
 
 }
