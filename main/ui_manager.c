@@ -66,3 +66,13 @@ void mpu6050_page(uint8_t* buffer , float* data)
     buffer_merge(buffer , buffer_temp , 1024);
 
 }
+
+void bmp280_page(uint8_t* buffer)
+{
+
+    uint8_t buffer_temp[1024];
+    memset(buffer_temp , 0x0 , 1024);
+
+    text_print(buffer_temp , "BMP280" , sizeof("BMP280") , 0 , 40 , 3);
+
+}

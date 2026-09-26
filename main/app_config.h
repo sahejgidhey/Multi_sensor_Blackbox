@@ -14,16 +14,20 @@
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 #include "ui_manager.h"
+#include "esp_timer.h"
 
 #define SDA_PIN GPIO_NUM_21
 #define SCL_PIN GPIO_NUM_22
-#define BUTTON GPIO_NUM_34 
 
-typedef struct sensor_data_temp {
+#define BUTTON GPIO_NUM_32 
+#define debounce_time 200000
+
+typedef struct{
     uint16_t sensor_id;
     float *data;
 }sensor_data_t;
 
 void i2c_init(i2c_master_bus_handle_t *bus_handle);
+void button_config();
 
 #endif

@@ -20,3 +20,18 @@ void i2c_init(i2c_master_bus_handle_t *bus_handle)
     ESP_LOGI("I2C" , "Initialized");
 
 }
+
+void button_config()
+{
+
+    gpio_config_t pin_config = {
+        .pin_bit_mask = (1ULL << BUTTON),
+        .mode = GPIO_MODE_INPUT,
+        .pull_up_en = GPIO_PULLUP_ENABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_NEGEDGE
+    };
+
+    gpio_config(&pin_config);
+
+}

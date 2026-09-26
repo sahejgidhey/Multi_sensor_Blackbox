@@ -3,5 +3,6 @@
 #include "include/oled_functions.h"
 
 void mpu6050_page(uint8_t* buffer , float* data);
+void bmp280_page(uint8_t* buffer);
 
 #endif
