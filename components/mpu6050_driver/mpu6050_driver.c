@@ -39,7 +39,7 @@ uint16_t format_bits(uint8_t bit_1 , uint8_t bit_2)
 void raw_data_convert(uint8_t *data , float *return_data)
 {
 
-    uint16_t format_data[7]; // because this is 16 bit data 
+    int16_t format_data[7]; // because this is 16 bit data 
 
     uint8_t j = 0; // this is used for indexing returning array
     for(int i = 0 ; i < 14 ; i+=2)
@@ -61,7 +61,7 @@ void raw_data_convert(uint8_t *data , float *return_data)
     return_data[3] = ((float)format_data[3] / 340.0f) + 36.53f; // this is the temp data
 
     //this convert raw gyro data to human readable data
-    for(int i = 3 ; i < 7 ; i++)
+    for(int i = 4 ; i < 7 ; i++)
     {
 
         return_data[i] = (float)format_data[i]/131.0f;

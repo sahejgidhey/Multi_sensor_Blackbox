@@ -96,7 +96,7 @@ void oled_init(i2c_master_bus_handle_t bus_handle, i2c_master_dev_handle_t* oled
 void oled_push_buffer(uint8_t* buffer)
 {
 
-    static uint8_t tx_buffer[1025] = {0x40};
+    uint8_t tx_buffer[1025] = {0x40};
 
     // Reset internal pointers to top left corner of the grid bounds
     uint8_t commands_column[3] = {0x21,0x00,0x7f};

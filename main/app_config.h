@@ -19,9 +19,9 @@
 #define SCL_PIN GPIO_NUM_22
 #define BUTTON GPIO_NUM_34 
 
-typedef struct sensor_data {
+typedef struct sensor_data_temp {
     uint16_t sensor_id;
-    float *sensor_data;
+    float *data;
 }sensor_data_t;
 
 void i2c_init(i2c_master_bus_handle_t *bus_handle);

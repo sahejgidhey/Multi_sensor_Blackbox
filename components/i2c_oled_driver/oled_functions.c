@@ -81,6 +81,11 @@ void bit_format_print(uint8_t *buffer_temp , uint8_t *format_arr , uint8_t forma
     for(int i = 0 ; i < format_arr_size ; i++)
     {
 
+        if(bufferOffset > 1024)
+        {
+            break;
+        }
+
         buffer_temp[bufferOffset + col] = format_arr[i]; // this add the bits to the index where it need to go 
         bufferOffset = bufferOffset + OLED_H_RES; // this will tell to print in which page
 
